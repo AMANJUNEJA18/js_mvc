@@ -3,19 +3,14 @@ const router = express.Router()
 
 const Joi = require('joi')
 
-function validator(title) {
+function validator(name) {
     const schema = {
         name: Joi.string().min(3).required
     }
     return Joi.validate(name, schema);
 }
 
-// const courses = [
-//     { id: 1, title: 'couses1' },
-//     { id: 2, title: 'couses3' },
-// ]
-
-const courses = [
+const products = [
     {id: 1, name: 'A', price: 30, quantity: 1, multiple: 5, discount: 10},
     {id: 2, name: 'B', price: 20, quantity: 5, multiple: 5, discount: 10},
     {id: 3, name: 'C', price: 50, quantity: 1, multiple: 5, discount: 10},
@@ -24,24 +19,28 @@ const courses = [
 
 
 router.get('/', (req, res) => {
-    res.send(courses)
+    res.send(products)
 })
 
 router.get('/:id', (req, res) => {
-    const course = courses.find(c => c.id === parseInt(req.params.id))
-    if (!course) res.send(404, 'Course Not found');
-    res.send(course)
+    const product = products.find(c => c.id === parseInt(req.params.id))
+    if (!product) res.send(404, 'product Not found');
+    res.send(product)
 })
 
-router.post('/', (req, res) => {
+router.route('/new').post((req, res) => {
     const { error } = validator(req.body)
     if (error) res.send(400, error.details);
-    const course = {
-        id: courses.length + 1,
-        title: req.body.title
+    const product = {
+        id: products.length + 1,
+        name: req.body.name,
+        price: req.body.price,
+        quantity: req.body.quantity,
+        multple: req.body.multiple,
+        discount: req.body.discount
     }
-    courses.push(course)
-    res.send(course);
+    products.push(product)
+    res.send(product);
 })
 
 module.exports = router;

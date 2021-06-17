@@ -11,10 +11,6 @@ function validator(title) {
     return Joi.validate(name, schema);
 }
 
-// const courses = [
-//     { id: 1, title: 'couses1' },
-//     { id: 2, title: 'couses3' },
-// ]
 const carts = [
     {id: 1, name: 'A', price: 30, quant: 3, multiple: 3, discount: 10},
     {id: 2, name: 'B', price: 20, quant: 2, multiple: 2, discount: 10},
@@ -45,18 +41,22 @@ router.get('/', (req, res) => {
     res.send(finalCart)
 })
 
-router.get('/:id', (req, res) => {
-    const cart = carts.find(c => c.id === parseInt(req.params.id))
-    if (!cart) res.send(404, 'Course Not found');
-    res.send(cart)
-})
+// router.get('/:id', (req, res) => {
+//     const cart = carts.find(c => c.id === parseInt(req.params.id))
+//     if (!cart) res.send(404, 'Cart Empty');
+//     res.send(cart)
+// })
 
-router.post('/', (req, res) => {
+router.post('scan/', (req, res) => {
     const { error } = validator(req.body)
     if (error) res.send(400, error.details);
     const cart = {
         id: carts.length + 1,
-        title: req.body.name
+        name: req.body.name,
+        price: req.body.price,
+        quant: req.body.quant,
+        multple: req.body.multiple,
+        discount: req.body.discount
     }
     carts.push(cart)
     res.send(cart);
